@@ -2,7 +2,7 @@ import discord
 import discord.ext.commands as commands
 
 class Music(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client, message, bot, view):
         self.client = client
     
     @commands.command()
