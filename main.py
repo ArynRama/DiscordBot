@@ -1,21 +1,30 @@
 import os
+import asyncio
 import discord
 from cogs.music import Music
 from dotenv import load_dotenv
-import discord.ext.commands as commands
+from discord.ext import commands
 
 
 load_dotenv()
-token = os.getenv("TOKEN")
 
-intents = discord.Intents.all()
-intents.message_content = True
+class Client(commands.Bot):
+    intents = discord.Intents.all()
 
-client = commands.Bot(intents=intents)
-
-@client.event
+client = Client(help_command=None)
+@client.listen()
 async def on_ready():
     print(f'Logged on as {client.user}')
 
-client.add_cog(Music(client))
-client.run(token)
+@client.slash_command()
+async def test(ctx=discord.ApplicationContext):
+    await ctx.respond("Working")
+
+client.load_extension('cogs.music')
+
+async def main_bot():
+    await client.start(os.getenv("TOKEN"))
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.gather(main_bot()))
