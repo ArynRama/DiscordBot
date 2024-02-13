@@ -12,4 +12,4 @@ intents = discord.Intents.all()
 intents.message_content = True
 
 client = MyClient(intents=intents)
-print(os.getenv("TOKEN"))
+client.run(os.getenv("TOKEN"))
