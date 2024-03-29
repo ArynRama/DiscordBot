@@ -21,12 +21,14 @@ async def main_bot():
     await client.start(os.getenv("TOKEN"))
 
 async def shutdown():
-    print('Shuting Down.')
+    print('Shuting Down...')
     for command in client.walk_application_commands():
         client.remove_application_command(command)
         print(f"Removing Command: {command.name}")
     await client.close()
     asyncio.get_event_loop().stop()
+    print("Shut down.")
+    sys.exit(0)
 
 @client.listen()
 async def on_ready():

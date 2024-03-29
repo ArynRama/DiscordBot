@@ -1,11 +1,15 @@
-import asyncio
-import discord
+import asyncio, discord, lavalink, os
 from discord.ext import commands
 
 class Music(commands.Cog):
     def __init__(self, client):
         self.client: discord.Client = client
     
+    @commands.Cog.listener('on_ready')
+    async def connect_lavalink(self):
+        nm = lavalink.NodeManager(client=self.client, regions="EU", connect_back=True)
+        nm.add_node(os.getenv('HOST'), os.getenv('PORT'), os.getenv('PASSWORD'), name=self.client.user.name, ssl=True, region="EU")
+
     @commands.slash_command()
     async def join(self, ctx: discord.ApplicationContext):
         """Makes the bot join a voice channel."""
