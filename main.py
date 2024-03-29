@@ -33,8 +33,8 @@ async def on_ready():
     print("Getting Ready...")
     loop = asyncio.get_event_loop()
     try:
-        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(shutdown))
-        loop.add_signal_handler(signal.SIGTERM, lambda: asyncio.create_task(shutdown))
+        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(shutdown()))
+        loop.add_signal_handler(signal.SIGTERM, lambda: asyncio.create_task(shutdown()))
     except:
         pass
     print(f'Logged on as {client.user}')
