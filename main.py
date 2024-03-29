@@ -6,10 +6,7 @@ from tracemalloc import start as trace
 trace()
 load_dotenv()
 
-class Client(commands.Bot):
-    intents = discord.Intents.all()
-
-client = Client(command_prefix="-==-=", help_command=None)
+client = commands.Bot(command_prefix=commands.when_mentioned(), help_command=None, intent=discord.Intents.all())
 
 @client.slash_command()
 async def test(ctx=discord.ApplicationContext):
