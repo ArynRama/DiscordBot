@@ -10,7 +10,7 @@ class Music(commands.Cog):
     async def join(self, ctx: discord.ApplicationContext):
         """Makes the bot join a voice channel."""
         if ctx.voice_client:
-            if len(ctx.author.voice.channel.members) > 1:
+            if len(ctx.voice_client.channel.members) > 1:
                 await ctx.respond("I'm already in a voice channel.")
                 return
         if ctx.author.voice != None:
@@ -28,7 +28,7 @@ class Music(commands.Cog):
             await ctx.respond("You must be in a voice channel to use that command.")
         elif ctx.author.voice.channel == ctx.guild.voice_client.channel:
             await ctx.respond("Leaving...")
-            ctx.guild.voice_client.disconnect()
+            await ctx.guild.voice_client.disconnect()
         else:
             await ctx.respond("You must be in the same voice channel to use this command.")
             
