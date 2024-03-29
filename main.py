@@ -9,7 +9,7 @@ load_dotenv()
 class Client(commands.Bot):
     intents = discord.Intents.all()
 
-client = Client(help_command=None)
+client = Client(command_prefix="-==-=", help_command=None)
 
 @client.slash_command()
 async def test(ctx=discord.ApplicationContext):
