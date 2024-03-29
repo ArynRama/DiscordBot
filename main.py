@@ -23,7 +23,7 @@ async def main_bot():
 async def shutdown():
     print('Shuting Down.')
     for command in client.walk_application_commands():
-        await client.remove_application_command(command)
+        client.remove_application_command(command)
         print(f"Removing Command: {command.name}")
     await client.close()
     asyncio.get_event_loop().stop()
