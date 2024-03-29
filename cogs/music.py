@@ -1,6 +1,6 @@
 import asyncio
 import discord
-import discord.ext.commands as commands
+from discord.ext import commands
 
 class Music(commands.Cog):
     def __init__(self, client):
