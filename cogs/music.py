@@ -51,7 +51,11 @@ class Music(commands.Cog):
     async def play(self, ctx: discord.ApplicationContext, *, search:str):
         """Makes the bot play your favorite song."""
         await ctx.defer()
-        player = ctx.guild.voice_client
+        if ctx.guild.voice_client:
+            player = ctx.guild.voice_client
+        else:
+            await self.join(ctx)
+            player = ctx.guild.voice_client
         result = await player.fetch_tracks(search)
         result = result[0]
         print(result)
