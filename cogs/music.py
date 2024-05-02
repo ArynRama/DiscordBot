@@ -18,8 +18,7 @@ class Music(commands.Cog):
             host = os.getenv('HOST'),
             port = int(os.getenv('PORT')),
             password = os.getenv('PASSWORD'),
-            label = self.client.user.name,
-            secure = True
+            label = self.client.user.name
         )
 
     @commands.slash_command()
