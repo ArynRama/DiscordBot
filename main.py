@@ -1,16 +1,13 @@
-import os, sys, signal, discord, asyncio
+import os, mafic, signal, discord, asyncio
 from dotenv import load_dotenv
 from discord.ext import commands
 from tracemalloc import start as trace
+from cogs.music import Music
 
 trace()
 load_dotenv()
 
 client = commands.Bot(command_prefix=commands.when_mentioned, help_command=None, intent=discord.Intents.all())
-
-@client.slash_command()
-async def test(ctx=discord.ApplicationContext):
-    await ctx.respond("Working")
 
 client.load_extension('cogs.music')
 
@@ -18,14 +15,10 @@ async def main_bot():
     await client.start(os.getenv("TOKEN"))
 
 async def shutdown():
-    print('Shuting Down...')
-    for command in client.walk_application_commands():
-        client.remove_application_command(command)
-        print(f"Removing Command: {command.name}")
+    client.unload_extension('cogs.music')
+    await client.pool.close()
     await client.close()
-    asyncio.get_event_loop().stop()
     print("Shut down.")
-    sys.exit(0)
 
 @client.listen()
 async def on_ready():
@@ -40,4 +33,9 @@ async def on_ready():
         
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.gather(main_bot()))
+    try:
+        loop.run_until_complete(asyncio.gather(main_bot()))
+    except:
+        loop.run_until_complete(shutdown())
+    finally:
+        print("Program shutdown.")
