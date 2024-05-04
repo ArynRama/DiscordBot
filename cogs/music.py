@@ -32,7 +32,7 @@ class Music(commands.Cog):
             host = os.getenv('HOST'),
             port = int(os.getenv('PORT')),
             password = os.getenv('PASSWORD'),
-            label = f"default_node_{self.client.user.name.replace(" ", "_").lower()}",
+            label = f"default_node_{self.client.user.name.replace('', '_').lower()}",
             resume_key="BeepBop"
         )
 
