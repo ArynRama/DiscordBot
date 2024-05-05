@@ -123,7 +123,7 @@ class Music(commands.Cog):
                 await send(ctx, f"Adding {result.name} to queue")
             else:
                 result = result[0]
-                player.add(track, ctx)
+                player.add(result, ctx)
                 await send(ctx, f"Adding {result.title} to queue")
 
     @is_dj()
