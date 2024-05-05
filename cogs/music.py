@@ -120,10 +120,12 @@ class Music(commands.Cog):
             if isinstance(result, mafic.Playlist):
                 for track in result.tracks:
                     player.add(track, ctx)
+                await player.resume()
                 await send(ctx, f"Adding {result.name} to queue")
             else:
                 result = result[0]
                 player.add(result, ctx)
+                await player.resume()
                 await send(ctx, f"Adding {result.title} to queue")
 
     @is_dj()
