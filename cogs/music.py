@@ -109,12 +109,12 @@ class Music(commands.Cog):
         if isinstance(result, mafic.Playlist):
             for track in result.tracks:
                 player.add(track, ctx)
-            await player.play(player.get_next()["track"])
+            await player.play(player.queue.pop(0))
             await send(ctx, f"Playing {result.tracks[0].title}")
         else:
             result = result[0]
             player.add(result, ctx)
-            await player.play(player.get_next()["track"])  
+            await player.play(result)  
             await send(ctx, f"Playing {result.title}")
     
     @is_dj()
