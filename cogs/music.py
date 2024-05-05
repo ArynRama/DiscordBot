@@ -106,17 +106,26 @@ class Music(commands.Cog):
             player: MyPlayer = ctx.guild.voice_client
         result = await player.fetch_tracks(search)
         
-        if isinstance(result, mafic.Playlist):
-            for track in result.tracks:
-                player.add(track, ctx)
-            await player.play(player.queue.pop(0))
-            await send(ctx, f"Playing {result.tracks[0].title}")
+        if player.current != None:
+            if isinstance(result, mafic.Playlist):
+                for track in result.tracks:
+                    player.add(track, ctx)
+                await player.play(player.queue.pop(0))
+                await send(ctx, f"Playing {result.name}")
+            else:
+                result = result[0]
+                await player.play(result)  
+                await send(ctx, f"Playing {result.title}")
         else:
-            result = result[0]
-            player.add(result, ctx)
-            await player.play(result)  
-            await send(ctx, f"Playing {result.title}")
-    
+            if isinstance(result, mafic.Playlist):
+                for track in result.tracks:
+                    player.add(track, ctx)
+                await send(ctx, f"Adding {result.name} to queue")
+            else:
+                result = result[0]
+                player.add(track, ctx)
+                await send(ctx, f"Adding {result.title} to queue")
+
     @is_dj()
     @commands.slash_command()
     async def stop(self, ctx: discord.ApplicationContext):
