@@ -106,7 +106,7 @@ class Music(commands.Cog):
             player: MyPlayer = ctx.guild.voice_client
         result = await player.fetch_tracks(search)
         
-        if player.current != None:
+        if player.current == None:
             if isinstance(result, mafic.Playlist):
                 for track in result.tracks:
                     player.add(track, ctx)
