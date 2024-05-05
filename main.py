@@ -1,21 +1,25 @@
-import os, mafic, signal, discord, asyncio
+import os, signal, discord, asyncio
 from dotenv import load_dotenv
 from discord.ext import commands
 from tracemalloc import start as trace
-from cogs.music import Music
 
 trace()
 load_dotenv()
 
-client = commands.Bot(command_prefix=commands.when_mentioned, help_command=None, intent=discord.Intents.all())
+client = commands.Bot(command_prefix=commands.when_mentioned, intent=discord.Intents.all())
 
-client.load_extension('cogs.music')
+for cog in os.listdir('./cogs'):
+    if cog.endswith('.py'):
+        client.load_extension(f'cogs.{cog[:-3]}')
+        
 
 async def main_bot():
     await client.start(os.getenv("TOKEN"))
 
 async def shutdown():
-    client.unload_extension('cogs.music')
+    for cog in os.listdir('./cogs'):
+        if cog.endswith('.py'):
+            client.unload_extension(f'cogs.{cog[:-3]}')
     await client.pool.close()
     await client.close()
     print("Shut down.")
