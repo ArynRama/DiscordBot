@@ -36,9 +36,6 @@ class Music(commands.Cog):
         client.Music = self
         self.channels = {}
 
-        with open('./data.json', 'r') as f:
-            self.data:dict = json.load(f)
-
     def is_dj():
         async def predicate(ctx:discord.ApplicationContext):
             if get_data(ctx.guild_id, "dj_role") != None:
@@ -266,9 +263,6 @@ class Music(commands.Cog):
     @commands.Cog.listener("on_node_ready")
     async def on_node_ready(self, node: mafic.Node):
         print(f"Music: Connected to {node.label}")
-        self.data["Session_Id"] = node.session_id.strip("'")
-        with open('./data.json', 'w') as f:
-            json.dump(self.data, f, indent="\t")
     
     @commands.Cog.listener("on_node_unavailable")
     async def on_node_unavailable(self, node:mafic.Node):
