@@ -13,7 +13,7 @@ class MyPlayer(mafic.Player):
     def add(self, track: mafic.Track, ctx: discord.ApplicationContext, index = "last"):
         dict = {
             "name": track.title,
-            "author": ctx.author,
+            "author": ctx.author.display_name,
             "track": track
         }
         if index == "last":
@@ -58,9 +58,7 @@ class Music(commands.Cog):
             host = os.getenv('HOST'),
             port = int(os.getenv('PORT')),
             password = os.getenv('PASSWORD'),
-            label = f"default_node_{self.client.user.name.replace(' ', '_').lower()}",
-            resume_key="BeepBop",
-            resuming_session_id=self.data.get("Session_Id")
+            label = f"default_node_{self.client.user.name.replace(' ', '_').lower()}"
         )
 
     @is_dj()
@@ -110,7 +108,7 @@ class Music(commands.Cog):
             if isinstance(result, mafic.Playlist):
                 for track in result.tracks:
                     player.add(track, ctx)
-                await player.play(player.queue.pop(0))
+                await player.play(player.queue.pop(0)["track"])
                 await send(ctx, f"Playing {result.name}")
             else:
                 result = result[0]
@@ -203,42 +201,44 @@ class Music(commands.Cog):
             else:
                 await send(ctx, f"Currently playing {track.title}")
 
-    # queue = discord.SlashCommandGroup(name="queue", description="View the queue.", guild_only=True)
+    queue = discord.SlashCommandGroup(name= "queue", description= "View the queue.", guild_only=True)
 
-    # @queue.command()
-    # async def _queue(self, ctx: discord.ApplicationContext):
-    #     player: MyPlayer = ctx.voice_client
+    @queue.command()
+    async def list(self, ctx: discord.ApplicationContext):
+        player: MyPlayer = ctx.voice_client
         
-    #     if not player:
-    #         return await send(ctx, "Not playing anything.")
+        if not player:
+            return await send(ctx, "Not playing anything.")
 
-    #     if len(player.queue) == 0:
-    #         return await send(ctx, "Nothing in queue")
-    #     else:
-    #         return await send(ctx, "Queue", player.queue)
+        if len(player.queue) == 0:
+            return await send(ctx, "Nothing in queue")
+        else:
+            return await send(ctx, "Queue", player.queue)
     
-    # @queue.command()
-    # @discord.option(name="songs", parameter_name= "args")
-    # async def add(self, ctx:discord.ApplicationContext, index, args):
-    #     player: MyPlayer = ctx.voice_client
-    #     result = await player.fetch_tracks(args)
+    @queue.command()
+    @discord.option(name="songs", parameter_name= "args")
+    @discord.option("index", type=int, required = False, min_value = 1)
+    async def add(self, ctx:discord.ApplicationContext, args, index):
+        player: MyPlayer = ctx.voice_client
+        result = await player.fetch_tracks(args)
 
-    #     if isinstance(result, mafic.Playlist):
-    #         for track in result.tracks:
-    #             player.add(track, ctx, index)
-    #         self.queue(self, ctx)
-    #     else:
-    #         result = result[0] 
-    #         await send(ctx, f"Adding {result.title} to queue.")  
-    #         player.add(track, ctx, index)
+        if isinstance(result, mafic.Playlist):
+            for i in range(len(result.tracks)):
+                player.add(result.tracks[i], ctx, index+i)
+            self.queue(self, ctx)
+        else:
+            result = result[0] 
+            await send(ctx, f"Adding {result.title} to queue.")  
+            player.add(result, ctx, index)
 
-    # @queue.command()
-    # async def remove(self,ctx:discord.ApplicationContext, index):
-    #     player : MyPlayer = ctx.voice_client
-    #     if not player:
-    #         return await send(ctx, "Not playing anything.")
-    #     await send(ctx, f"Removing {player.queue[index-1]["title"]} from queue.")  
-    #     player.remove(index)
+    @queue.command()
+    @discord.option("index", type=int, min_value = 1 )
+    async def remove(self,ctx:discord.ApplicationContext, index):
+        player : MyPlayer = ctx.voice_client
+        if not player:
+            return await send(ctx, "Not playing anything.")
+        await send(ctx, f"Removing {player.queue[index-1]["name"]} from queue.")  
+        player.remove(index)
 
     @commands.Cog.listener(name="on_voice_state_update")
     async def LeaveAfter5(self=commands.Bot, member=discord.Member, before=discord.VoiceState, after=discord.VoiceState):

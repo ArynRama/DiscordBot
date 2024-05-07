@@ -48,6 +48,6 @@ async def send(ctx: discord.ApplicationContext, message:str , fields: list[dict]
         for field in fields:
             if len(embed.fields) == 25:
                 break
-            embed.add_field(name = f" {i}. {field['name']}", value= field["author"].display_name, inline=False)
+            embed.add_field(name = f" {i}. {field['name']}", value= field["author"], inline=False)
             i += 1
     return await ctx.respond(embed=embed, ephemeral=True)
