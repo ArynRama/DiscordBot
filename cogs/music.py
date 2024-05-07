@@ -234,7 +234,7 @@ class Music(commands.Cog):
         player : MyPlayer = ctx.voice_client
         if not player:
             return await send(ctx, "Not playing anything.")
-        await send(ctx, f"Removing {player.queue[index-1]["name"]} from queue.")  
+        await send(ctx, f"Removing {player.queue[index-1]['name']} from queue.")  
         player.remove(index)
 
     @commands.Cog.listener(name="on_voice_state_update")
