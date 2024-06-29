@@ -35,6 +35,9 @@ class Music(commands.Cog):
         self.client: commands.Bot = client
         client.Music = self
         self.channels = {}
+        self.pool: mafic.NodePool= mafic.NodePool(self.client)
+        self.client.loop.create_task(self.add_nodes())
+        self.client.pool = self.pool
 
     def is_dj():
         async def predicate(ctx:discord.ApplicationContext):
@@ -44,11 +47,6 @@ class Music(commands.Cog):
                 return True
         return commands.check(predicate)
 
-    @commands.Cog.listener('on_ready')
-    async def connect_mafic(self):
-        self.pool: mafic.NodePool= mafic.NodePool(self.client)
-        self.client.loop.create_task(self.add_nodes())
-        self.client.pool = self.pool
     
     async def add_nodes(self):
         await self.pool.create_node(
