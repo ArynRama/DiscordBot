@@ -106,7 +106,7 @@ class Music(commands.Cog):
                 await player.play(player.queue.pop(0)["track"])
                 await send(ctx, f"Playing {result.name}")
             else:
-                result = result[0]
+                # result = result[0]
                 await player.play(result)  
                 await send(ctx, f"Playing {result.title}")
         else:
