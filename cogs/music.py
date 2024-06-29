@@ -98,28 +98,28 @@ class Music(commands.Cog):
             await self.join(ctx)
             player: MyPlayer = ctx.guild.voice_client
         result = await player.fetch_tracks(search)
-        
-        if player.current == None:
-            if isinstance(result, mafic.Playlist):
-                for track in result.tracks:
-                    player.add(track, ctx)
-                await player.play(player.queue.pop(0)["track"])
-                await send(ctx, f"Playing {result.name}")
+        if result[0] != None:
+            if player.current == None:
+                if isinstance(result, mafic.Playlist):
+                    for track in result.tracks:
+                        player.add(track, ctx)
+                    await player.play(player.queue.pop(0)["track"])
+                    await send(ctx, f"Playing {result.name}")
+                else:
+                    result = result[0]
+                    await player.play(result)  
+                    await send(ctx, f"Playing {result.title}")
             else:
-                result = result[0]
-                await player.play(result)  
-                await send(ctx, f"Playing {result.title}")
-        else:
-            if isinstance(result, mafic.Playlist):
-                for track in result.tracks:
-                    player.add(track, ctx)
-                await player.resume()
-                await send(ctx, f"Adding {result.name} to queue")
-            else:
-                result = result[0]
-                player.add(result, ctx)
-                await player.resume()
-                await send(ctx, f"Adding {result.title} to queue")
+                if isinstance(result, mafic.Playlist):
+                    for track in result.tracks:
+                        player.add(track, ctx)
+                    await player.resume()
+                    await send(ctx, f"Adding {result.name} to queue")
+                else:
+                    result = result[0]
+                    player.add(result, ctx)
+                    await player.resume()
+                    await send(ctx, f"Adding {result.title} to queue")
 
     @is_dj()
     @commands.slash_command()
